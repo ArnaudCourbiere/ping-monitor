@@ -11,7 +11,7 @@
 # Description:       Start script for the ping monitor
 ### END INIT INFO
 
-DAEMON=/home/arnaud/development/ping_monitor/bin/ping_monitor
+DAEMON=/home/arnaud/Development/ping_monitor/bin/ping_monitor
 PIDDIR=/var/run/ping_monitor
 PIDFILE=$PIDDIR/pid
 DAEMONUSER=arnaud
@@ -28,14 +28,14 @@ ping_monitor_start () {
 		mkdir -p $PIDDIR
 		chown $DAEMONUSER:$DAEMONUSER $PIDDIR
 	fi
-	start-stop-daemon -x $DAEMON -p $PIDFILE --start -- --system --disallow-exit --disallow-module-loading=$DISALLOW_MODULE_LOADING --daemonize --log-target=syslog --high-priority
+	start-stop-daemon -x $DAEMON -p $PIDFILE -c $DAEMONUSER --start
 	status=$?
 	log_end_msg ${status}
 }
 
 ping_monitor_stop () {
 	log_daemon_msg "Stopping system ping monitor Daemon"
-	start-stop-daemon -p $PIDFILE --stop --retry 5 || echo -n "...which is not running"
+	start-stop-daemon -x $DAEMON -p $PIDFILE --stop --retry 5 || echo -n "...which is not running"
 	log_end_msg $?
 }
 
@@ -56,7 +56,7 @@ case "$1" in
 		killall -9 ping_monitor || true
 		;;
 	status)
-		status_of_proc -p $PIDFILE "$DAEMON" "system-wide ping monitor" && exit 0 || exit $?
+		status_of_proc -p $PIDFILE "$DAEMON" "ping monitor" && exit 0 || exit $?
 		;;
 	*)
 		echo "Usage: /etc/init.d/ping-monitor {start|stop|force-stop|restart|reload|force-reload|status}"
