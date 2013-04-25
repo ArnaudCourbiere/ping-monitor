@@ -23,45 +23,45 @@ test -x $DAEMON || exit 0
 
 
 ping_monitor_start () {
-	log_daemon_msg "Starting system ping monitor Daemon"
-	if [ ! -d $PIDDIR ]; then
-		mkdir -p $PIDDIR
-		chown $DAEMONUSER:$DAEMONUSER $PIDDIR
-	fi
-	start-stop-daemon -x $DAEMON -p $PIDFILE -c $DAEMONUSER --start
-	status=$?
-	log_end_msg ${status}
+    log_daemon_msg "Starting system ping monitor Daemon"
+    if [ ! -d $PIDDIR ]; then
+        mkdir -p $PIDDIR
+        chown $DAEMONUSER:$DAEMONUSER $PIDDIR
+    fi
+    start-stop-daemon -x $DAEMON -p $PIDFILE -c $DAEMONUSER --start
+    status=$?
+    log_end_msg ${status}
 }
 
 ping_monitor_stop () {
-	log_daemon_msg "Stopping system ping monitor Daemon"
-	start-stop-daemon -x $DAEMON -p $PIDFILE --stop --retry 5 || echo -n "...which is not running"
-	log_end_msg $?
+    log_daemon_msg "Stopping system ping monitor Daemon"
+    start-stop-daemon -x $DAEMON -p $PIDFILE --stop --retry 5 || echo -n "...which is not running"
+    log_end_msg $?
 }
 
 case "$1" in
-	start|stop)
-		ping_monitor_${1}
-		;;
-	restart|reload|force-reload)
-		if [ -s $PIDFILE ] && kill -0 $(cat $PIDFILE) >/dev/null 2>&1; then
-			ping_monitor_stop
-			ping_monitor_start
-		fi
-		;;
-	force-stop)
-		ping_monitor_stop
-		killall ping_monitor || true
-		sleep 2
-		killall -9 ping_monitor || true
-		;;
-	status)
-		status_of_proc -p $PIDFILE "$DAEMON" "ping monitor" && exit 0 || exit $?
-		;;
-	*)
-		echo "Usage: /etc/init.d/ping-monitor {start|stop|force-stop|restart|reload|force-reload|status}"
-		exit 1
-		;;
+    start|stop)
+        ping_monitor_${1}
+        ;;
+    restart|reload|force-reload)
+        if [ -s $PIDFILE ] && kill -0 $(cat $PIDFILE) >/dev/null 2>&1; then
+            ping_monitor_stop
+            ping_monitor_start
+        fi
+        ;;
+    force-stop)
+        ping_monitor_stop
+        killall ping_monitor || true
+        sleep 2
+        killall -9 ping_monitor || true
+        ;;
+    status)
+        status_of_proc -p $PIDFILE "$DAEMON" "ping monitor" && exit 0 || exit $?
+        ;;
+    *)
+        echo "Usage: /etc/init.d/ping-monitor {start|stop|force-stop|restart|reload|force-reload|status}"
+        exit 1
+        ;;
 esac
 
 exit 0
