@@ -13,17 +13,11 @@
 #define PID_DIR "/var/run/ping_monitor"
 #define PID_FILE "/var/run/ping_monitor/pid"
 
-static void handler(int sig, siginfo_t *siginfo, void *context)
-{
-    unlink(PID_FILE);
-    _exit(0);
-}
+void ping_log(char*, ...);
+static void handler(int, siginfo_t*, void*);
 
 int main(int argc, char *argv[])
 {
-    void ping_log(char*, ...);
-    //static void handler(int, siginfo_t*, void*);
-
     // Setup signal handler
     struct sigaction act;
     memset(&act, '\0', sizeof(act));
@@ -132,6 +126,12 @@ int main(int argc, char *argv[])
     }
 
     exit(EXIT_SUCCESS);
+}
+
+static void handler(int sig, siginfo_t *siginfo, void *context)
+{
+    unlink(PID_FILE);
+    _exit(0);
 }
 
 void ping_log( char *buff,...)
