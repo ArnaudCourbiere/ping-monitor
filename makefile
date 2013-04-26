@@ -1,3 +1,7 @@
+-include config.mk
+
+DESTDIR ?= /usr/local
+
 #IDIR=../include
 CC=gcc
 CFLAGS=-Wall
@@ -26,8 +30,13 @@ $(BDIR):
 $(ODIR)/%.o: %.c
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-.PHONY: clean
+.PHONY: clean distclean intall
 
 clean:
-	rm -r $(ODIR) $(BDIR)
+	rm -rf $(ODIR) $(BDIR)
 
+distclean:
+	rm -f config.mk
+
+install:
+	
