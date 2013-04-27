@@ -1,6 +1,8 @@
 #!/usr/bin/env python
 import sys
 
+init_file = '/etc/init.d/ping-monitor'
+
 init_script = '''#!/bin/env sh
 ### BEGIN INIT INFO
 # Provides:          ping monitor
@@ -78,14 +80,15 @@ def main(argv):
     
     config = {
         'daemon': 'ping-monitor',
-        'daemon_path': install_bin + '/' + daemon,
+        'daemon_path': install_bin + '/ping-monitor',
         'daemon_user': 'arnaud',
-        'init_file': '/etc/init.d/ping-monitor'
+        'init_file': init_file
     }
     
-    f = open(init_file, 'w+')
-    f.write(init_script.format(**config))
-    f.close()
+    print(init_script.format(**config))
+    #f = open(init_file, 'w+')
+    #f.write(init_script.format(**config))
+    #f.close()
 
 if __name__ == '__main__':
     main(sys.argv[:])
