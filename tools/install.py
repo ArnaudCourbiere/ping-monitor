@@ -1,8 +1,6 @@
 #!/usr/bin/env python
 import sys
 
-init_file = '/etc/init.d/ping-monitor'
-
 init_script = '''#!/bin/env sh
 ### BEGIN INIT INFO
 # Provides:          ping monitor
@@ -16,11 +14,11 @@ init_script = '''#!/bin/env sh
 # Description:       Start script for the ping monitor
 ### END INIT INFO
 
-DAEMON=%s
-DAEMONPATH=%s
+DAEMON={daemon}
+DAEMONPATH={daemon_path}
 PIDDIR=/var/run/ping_monitor
 PIDFILE=$PIDDIR/pid
-DAEMONUSER=%s
+DAEMONUSER={daemon_user}
 PATH=/sbin:/bin:/usr/sbin:/usr/bin
 
 test -x $DAEMONPATH || exit 0
@@ -65,14 +63,12 @@ case "$1" in
         status_of_proc -p $PIDFILE "$DAEMONPATH" "ping monitor" && exit 0 || exit $?
         ;;
     *)
-        echo "Usage: %s {start|stop|force-stop|restart|reload|force-reload|status}"
+        echo "Usage: {init_file} {start|stop|force-stop|restart|reload|force-reload|status}"
         exit 1
         ;;
 esac
 
 exit 0'''
-
-def append(data):
 
 def main(argv):
     if len(argv) > 1:
@@ -80,11 +76,15 @@ def main(argv):
     else:
         install_bin = '/usr/local/bin'
     
-    daemon = 'ping-monitor'
-    daemon_path = install_bin + '/' + daemon
-    daemon_user = 'arnaud'
+    config = {
+        'daemon': 'ping-monitor',
+        'daemon_path': install_bin + '/' + daemon,
+        'daemon_user': 'arnaud',
+        'init_file': '/etc/init.d/ping-monitor'
+    }
+    
     f = open(init_file, 'w+')
-    f.write(init_script % daemon, daemon_path, daemon_user, init_file)
+    f.write(init_script.format(**config))
     f.close()
 
 if __name__ == '__main__':
