@@ -28,7 +28,7 @@ test -x $DAEMONPATH || exit 0
 . /lib/lsb/init-functions
 
 
-ping_monitor_start () {
+ping_monitor_start () {{
     log_daemon_msg "Starting system ping monitor Daemon"
     if [ ! -d $PIDDIR ]; then
         mkdir -p $PIDDIR
@@ -36,18 +36,18 @@ ping_monitor_start () {
     fi
     start-stop-daemon -x $DAEMONPATH -p $PIDFILE -c $DAEMONUSER --start
     status=$?
-    log_end_msg ${status}
-}
+    log_end_msg ${{status}}
+}}
 
-ping_monitor_stop () {
+ping_monitor_stop () {{
     log_daemon_msg "Stopping system ping monitor Daemon"
     start-stop-daemon -x $DAEMONPATH -p $PIDFILE --stop --retry 5 || echo -n "...which is not running"
     log_end_msg $?
-}
+}}
 
 case "$1" in
     start|stop)
-        ping_monitor_${1}
+        ping_monitor_${{1}}
         ;;
     restart|reload|force-reload)
         if [ -s $PIDFILE ] && kill -0 $(cat $PIDFILE) >/dev/null 2>&1; then
@@ -65,7 +65,7 @@ case "$1" in
         status_of_proc -p $PIDFILE "$DAEMONPATH" "ping monitor" && exit 0 || exit $?
         ;;
     *)
-        echo "Usage: {init_file} {start|stop|force-stop|restart|reload|force-reload|status}"
+        echo "Usage: {init_file} {{start|stop|force-stop|restart|reload|force-reload|status}}"
         exit 1
         ;;
 esac
@@ -85,10 +85,9 @@ def main(argv):
         'init_file': init_file
     }
     
-    print(init_script.format(**config))
-    #f = open(init_file, 'w+')
-    #f.write(init_script.format(**config))
-    #f.close()
+    f = open(init_file, 'w+')
+    f.write(init_script.format(**config))
+    f.close()
 
 if __name__ == '__main__':
     main(sys.argv[:])
