@@ -4,7 +4,7 @@ PREFIX?=/usr/local
 INSTALL_BIN=$(PREFIX)/bin
 ODIR=./obj
 BDIR=./bin
-BFILE=ping_monitor
+BFILE=ping-monitor
 BFILE_PATH=$(BDIR)/$(BFILE)
 
 INSTALL=install
