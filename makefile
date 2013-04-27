@@ -1,24 +1,22 @@
 -include config.mk
 
-DESTDIR ?= /usr/local
-
-#IDIR=../include
-CC=gcc
-CFLAGS=-Wall
-
+PREFIX?=/usr/local
+INSTALL_BIN=$(PREFIX)/bin
 ODIR=./obj
 BDIR=./bin
-#LIBS=-lcurl
+BFILE=ping_monitor
+BFILE_PATH=$(BDIR)/$(BFILE)
 
-#_DEPS=utility.h
-#DEPS=$(patsubst %, $(IDIR)/%, $(_DEPS))
+INSTALL=install
+CC=gcc
+CFLAGS=-Wall
 
 _OBJ=main.o
 OBJ=$(patsubst %, $(ODIR)/%, $(_OBJ))
 
-all: $(ODIR) $(BDIR) $(BDIR)/ping_monitor
+all: $(ODIR) $(BDIR) $(BFILE_PATH)
     
-$(BDIR)/ping_monitor: $(OBJ)
+$(BFILE_PATH): $(OBJ)
 	$(CC) -o $@ $^ $(CFLAGS)
 
 $(ODIR):
@@ -30,7 +28,7 @@ $(BDIR):
 $(ODIR)/%.o: %.c
 	$(CC) -c -o $@ $< $(CFLAGS)
 
-.PHONY: clean distclean intall
+.PHONY: clean distclean intall uninstall
 
 clean:
 	rm -rf $(ODIR) $(BDIR)
@@ -38,5 +36,9 @@ clean:
 distclean:
 	rm -f config.mk
 
-install:
-	
+install: all
+	mkdir -p $(INSTALL_BIN)
+	$(INSTALL) $(BFILE_PATH) $(INSTALL_BIN)
+
+uninstall:
+	rm -f  $(INSTALL_BIN)/$(BFILE)
