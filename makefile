@@ -43,6 +43,6 @@ install: all
 	update-rc.d ping-monitor defaults
 
 uninstall:
-	/etc/init.d/ping-monitor stop
+	-(/etc/init.d/ping-monitor stop)
 	rm -rf  $(INSTALL_BIN)/$(BFILE) /etc/init.d/ping-monitor /var/run/ping-monitor
 	update-rc.d ping-monitor remove
