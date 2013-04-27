@@ -1,9 +1,10 @@
 #!/usr/bin/env python
 import sys
+import os
 
 init_file = '/etc/init.d/ping-monitor'
 
-init_script = '''#!/bin/env sh
+init_script = '''#!/bin/sh
 ### BEGIN INIT INFO
 # Provides:          ping monitor
 # Required-Start:    $remote_fs $syslog
@@ -88,8 +89,8 @@ def main(argv):
     f = open(init_file, 'w+')
     f.write(init_script.format(**config))
     f.close()
+    os.chmod(init_file, 0755)
 
 if __name__ == '__main__':
     main(sys.argv[:])
 
-# update-rc.d ping-monitor remove|defaults

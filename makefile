@@ -39,6 +39,10 @@ distclean:
 install: all
 	mkdir -p $(INSTALL_BIN)
 	$(INSTALL) $(BFILE_PATH) $(INSTALL_BIN)
+	tools/install.py '$(INSTALL_BIN)'
+	update-rc.d ping-monitor defaults
 
 uninstall:
-	rm -f  $(INSTALL_BIN)/$(BFILE)
+	/etc/init.d/ping-monitor stop
+	rm -rf  $(INSTALL_BIN)/$(BFILE) /etc/init.d/ping-monitor /var/run/ping-monitor
+	update-rc.d ping-monitor remove
